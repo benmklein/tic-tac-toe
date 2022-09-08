@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "@lottiefiles/lottie-interactivity": "^1.6.1",
+    "lottie-web": "^5.9.6"
+  }
+}
