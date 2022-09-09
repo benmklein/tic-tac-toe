@@ -4,8 +4,10 @@ const gameState = (() => {
     const computer = { token: 'O' };
     let _gameArray = Array(9).fill(null);
     const makeMove = (playerToken, i) => {
-        if (gameState.getWinnerToken())
+        if (gameState.getWinnerToken() || !!_gameArray[i]) {
+            console.log("Spot taken.");
             return;
+        }
         _gameArray[i] = _gameArray[i] || playerToken;
         displayController.updateBoard(gameState.showGameArray());
         if (gameState.getWinnerToken())
@@ -69,7 +71,6 @@ const gameState = (() => {
 const playerFactory = (token, name) => {
     const makeMove = (i) => {
         gameState.makeMove(token, i);
-        console.log(`Player: ${name} placed a ${token} on position ${i}`);
     };
     return {
         makeMove
@@ -113,7 +114,7 @@ const displayController = ((doc) => {
         formbg.style.display = 'none';
     };
     const setResultText = (result) => {
-        doc.querySelector('.result-text').textContent = result;
+        doc.querySelector('.result-text').innerHTML = result;
     };
     return {
         createGameInDOM,
@@ -131,11 +132,17 @@ const gameDriver = (() => {
     };
     const declareWinner = (winner) => {
         let result = '';
-        if (winner === 'tie') {
-            result = 'It\'s a tie.';
+        switch (winner) {
+            case 'tie':
+                result = 'It\'s a tie.';
+                break;
+            case 'Computer':
+                result = 'You\'ve lost. Whoops.';
+                break;
+            case 'Player':
+                result = 'You did it. You\'re the best around. </br> Nothing\'s gonna ever keep you down.';
+                break;
         }
-        else
-            result = winner + ' has won the game!';
         displayController.displayResetButton();
         displayController.setResultText(result);
     };
@@ -144,7 +151,7 @@ const gameDriver = (() => {
         declareWinner
     };
 })();
-const player = playerFactory('X', 'Ben');
+const player = playerFactory('X', 'Player');
 const computer = playerFactory('O', 'Computer');
 displayController.createGameInDOM();
 displayController.updateBoard(gameState.showGameArray());
